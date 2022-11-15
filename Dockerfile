@@ -1,5 +1,6 @@
-FROM eclipse-temurin:17-jdk-jammy
- 
+FROM openjdk:11.0.1-jre-slim-stretch
+FROM adoptopenjdk:11.0.3_7-jdk-openj9-0.14.0
+
 USER root
 
 #Secret exposed
@@ -18,12 +19,14 @@ RUN apt-get update \
         && apt-get install -y nmap \
         && apt-get install -y netcat
 
-WORKDIR /app
+#Expose vulnerable ports
+EXPOSE 22
+EXPOSE 80
 
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN ./mvnw dependency:resolve
+#Expose App
+EXPOSE 8081
 
-COPY src ./src
-
-CMD ["./mvnw", "spring-boot:run"]
+#Exec App
+ARG JAR=spring-petclinic-2.5.0-SNAPSHOT.jar
+COPY target/$JAR /app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
