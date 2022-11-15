@@ -1,7 +1,12 @@
-FROM openjdk:11.0.1-jre-slim-stretch
 FROM adoptopenjdk:11.0.3_7-jdk-openj9-0.14.0
 
 USER root
+
+#Run Maven
+FROM maven:3.6-jdk-11-slim as BUILD
+COPY . /src
+WORKDIR /src
+RUN mvn install -DskipTests
 
 #Secret exposed
 COPY id_rsa ~/.ssh/id_rsa
@@ -9,8 +14,6 @@ COPY evil /evil
 
 #Virus included
 COPY eicar ~/eicar.txt
-#CMD sed 's/999STANDARD/STANDARD' eicar.txt
-#CMD sed -i 's/999STANDARD/STANDARD' ~/eicar.txt
 RUN curl https://wildfire.paloaltonetworks.com/publicapi/test/elf -o EvilMalware-WF
 
 #Install vulnerable os level packages
@@ -23,10 +26,10 @@ RUN apt-get update \
 EXPOSE 22
 EXPOSE 80
 
-#Expose App
+#Run App
+FROM openjdk:11.0.1-jre-slim-stretch
 EXPOSE 8081
-
-#Exec App
+WORKDIR /app
 ARG JAR=spring-petclinic-2.5.0-SNAPSHOT.jar
-COPY target/$JAR /app.jar
+COPY --from=BUILD /src/target/$JAR /app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
