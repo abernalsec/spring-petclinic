@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: petclinic
+  name: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+  template:
+    metadata:
+      labels:
+        app: petclinic
+    spec:
+      containers:
+        - image: 292031541925.dkr.ecr.us-east-1.amazonaws.com/spring-petclinic-demo:31
+          name: petclinic
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 8081
+              name: petclinic
+              protocol: TCP
+      imagePullSecrets:
+      - name: regcred
+      securityContext:
+        runAsUser: 0
+      hostNetwork: false
