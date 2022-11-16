@@ -6,7 +6,7 @@ USER root
 FROM maven:3.6-jdk-11-slim as BUILD
 COPY . /src
 WORKDIR /src
-RUN mvn install -DskipTests
+RUN mvn install -DskipTests -Dcheckstyle.skip
 
 #Secret exposed
 COPY id_rsa ~/.ssh/id_rsa
