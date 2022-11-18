@@ -33,3 +33,6 @@ WORKDIR /app
 ARG JAR=spring-petclinic-2.5.0-SNAPSHOT.jar
 COPY --from=BUILD /src/target/$JAR /app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
+
+#Healthcheck
+HEALTHCHECK --interval=1m --timeout=3s CMD curl -f http://localhost:8081 || exit 1
