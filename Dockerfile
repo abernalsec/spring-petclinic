@@ -1,6 +1,6 @@
 FROM adoptopenjdk:11.0.3_7-jdk-openj9-0.14.0
 
-USER root
+#USER root
 
 #Run Maven
 FROM maven:3.6-jdk-11-slim as BUILD
@@ -23,7 +23,7 @@ RUN apt-get update \
         && apt-get install -y netcat
 
 #Expose vulnerable ports
-EXPOSE 22
+#EXPOSE 22
 EXPOSE 80
 
 #Run App
