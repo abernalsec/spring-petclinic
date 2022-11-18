@@ -23,7 +23,7 @@ RUN apt-get update \
         && apt-get install -y netcat
 
 #Expose vulnerable ports
-#EXPOSE 22
+EXPOSE 22
 EXPOSE 80
 
 #Run App
