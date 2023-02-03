@@ -36,6 +36,3 @@ ENTRYPOINT ["java","-jar","/app.jar"]
 
 #Healthcheck
 HEALTHCHECK --interval=1m --timeout=3s CMD curl -f http://localhost:8081 || exit 1
-
-#Clean Up 
-RUN docker rmi maven:3.6-jdk-11-slim openjdk:11.0.1-jre-slim-stretch
